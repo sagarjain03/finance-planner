@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0B0F17;
+  --foreground: #e2e8f0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  @apply antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-weight: 500;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Smooth transitions */
+a, button {
+  @apply transition-all duration-300;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-blue-500/30 text-blue-200;
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+  @apply bg-white/[0.02] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+}
+
+.glass-card-hover {
+  @apply hover:bg-white/[0.04] hover:border-white/[0.15] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)];
+}
+
+.text-gradient {
+  @apply bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent;
+}
+
+.text-gradient-gold {
+  @apply bg-gradient-to-r from-amber-200 to-yellow-500 bg-clip-text text-transparent;
+}
