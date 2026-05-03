@@ -29,8 +29,8 @@ export function Sidebar() {
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Planner', href: '/onboarding', icon: Wallet },
-    { name: 'Goals', href: '/goals', icon: Target }, // Placeholder for future
-    { name: 'Settings', href: '/settings', icon: Settings }, // Placeholder for future
+    // { name: 'Goals', href: '/goals', icon: Target }, // Placeholder for future
+    // { name: 'Settings', href: '/settings', icon: Settings }, // Placeholder for future
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
