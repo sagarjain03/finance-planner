@@ -70,7 +70,14 @@ export interface IFinancialPlan extends Document {
   };
   aiInsights: {
     summary: string;
+    sections: Array<{
+      title: string;
+      summary: string;
+      bullets: string[];
+    }>;
     insights: string[];
+    recommendations: string[];
+    motivation: string;
   };
   budgetFeedback: {
     needsStatus: 'over' | 'ideal' | 'under';

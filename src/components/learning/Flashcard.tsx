@@ -21,19 +21,19 @@ export function Flashcard({ term, onLearnMore }: FlashcardProps) {
   return (
     <Card
       onClick={() => onLearnMore(term)}
-      className={`bg-linear-to-br from-slate-800 to-slate-900 border-2 border-slate-700 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-slate-600 h-64 flex flex-col justify-between p-6`}
+      className={`bg-linear-to-br from-zinc-800 to-zinc-900 border-2 border-zinc-700 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-zinc-600 h-64 flex flex-col justify-between p-6`}
     >
       <div>
-        <p className={`text-sm font-semibold uppercase tracking-wider mb-2 text-slate-400`}>
+        <p className={`text-sm font-semibold uppercase tracking-wider mb-2 text-zinc-400`}>
           {term.category}
         </p>
-        <h3 className="text-2xl font-black text-slate-100">
+        <h3 className="text-2xl font-black text-zinc-100">
           {term.term}
         </h3>
       </div>
 
       <div>
-        <p className="text-slate-400 text-sm leading-relaxed mb-3">
+        <p className="text-zinc-400 text-sm leading-relaxed mb-3">
           {term.shortExplanation}
         </p>
         <button
@@ -41,7 +41,7 @@ export function Flashcard({ term, onLearnMore }: FlashcardProps) {
             e.stopPropagation();
             onLearnMore(term);
           }}
-          className={`text-xs font-semibold text-slate-300 hover:text-slate-100 transition-colors`}
+          className={`text-xs font-semibold text-zinc-300 hover:text-zinc-100 transition-colors`}
         >
           Learn more →
         </button>

@@ -3,7 +3,7 @@
 function Bone({ className = '' }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 rounded-xl ${className}`}
+      className={`animate-pulse bg-white/5 rounded-xl ${className}`}
     />
   );
 }

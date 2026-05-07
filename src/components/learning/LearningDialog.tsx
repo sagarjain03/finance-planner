@@ -41,7 +41,7 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 "
           />
 
           {/* Dialog */}
@@ -50,39 +50,39 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-3xl max-h-[90vh] bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50"
+            className="fixed left-1/2 top-1/2 z-50 w-[95%] max-w-3xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-zinc-950 to-black shadow-2xl"
           >
             {/* Header */}
-            <div className="sticky top-0 p-6 border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm flex justify-between items-start">
+            <div className="sticky top-0 p-6 border-b border-white/10 bg-zinc-900/80 backdrop-blur-sm flex justify-between items-start">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <BookOpen className="w-5 h-5 text-slate-400" />
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  <BookOpen className="w-5 h-5 text-zinc-400" />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
                     {term.category}
                   </span>
                 </div>
-                <h2 className="text-3xl font-black text-slate-100">
+                <h2 className="text-3xl font-black text-zinc-100">
                   {term.term}
                 </h2>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-slate-800 transition-colors text-slate-400 hover:text-slate-200"
+                className="p-2 rounded-lg hover:bg-zinc-800 transition-colors text-zinc-400 hover:text-zinc-200"
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             {/* Tabs */}
-            <div className="px-6 pt-6 flex gap-2 border-b border-slate-700 overflow-x-auto">
+            <div className="px-6 pt-6 flex gap-2 border-b border-white/10 overflow-x-auto">
               {['overview', 'detailed', 'example', 'tips'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as typeof activeTab)}
                   className={`pb-4 px-4 font-semibold text-sm uppercase tracking-wider transition-colors whitespace-nowrap ${
                     activeTab === tab
-                      ? 'text-slate-100 border-b-2 border-slate-100'
-                      : 'text-slate-500 hover:text-slate-400'
+                      ? 'text-zinc-100 border-b-2 border-zinc-200'
+                      : 'text-zinc-500 hover:text-zinc-400'
                   }`}
                 >
                   {tab === 'overview' && '📖 Overview'}
@@ -107,31 +107,31 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
                 >
                   {activeTab === 'overview' && (
                     <div className="space-y-4">
-                      <div className="p-4 rounded-xl bg-slate-800 border border-slate-700">
-                        <p className="text-slate-300 leading-relaxed text-lg">
+                      <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+                        <p className="text-zinc-300 leading-relaxed text-lg">
                           {term.shortExplanation}
                         </p>
                       </div>
                       <div className="grid md:grid-cols-2 gap-4">
-                        <div className="p-4 rounded-xl bg-slate-800 border border-slate-700">
-                          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                        <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+                          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
                             Category
                           </p>
-                          <p className="text-slate-200 capitalize">{term.category}</p>
+                          <p className="text-zinc-200 capitalize">{term.category}</p>
                         </div>
-                        <div className="p-4 rounded-xl bg-slate-800 border border-slate-700">
-                          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                        <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+                          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
                             Difficulty
                           </p>
-                          <p className="text-slate-200">Beginner Friendly</p>
+                          <p className="text-zinc-200">Beginner Friendly</p>
                         </div>
                       </div>
                     </div>
                   )}
 
                   {activeTab === 'detailed' && (
-                    <div className="p-6 rounded-xl bg-slate-800 border border-slate-700 space-y-4">
-                      <p className="text-slate-300 leading-relaxed text-base whitespace-pre-wrap">
+                    <div className="p-6 rounded-xl bg-zinc-900/60 border border-white/10 space-y-4">
+                      <p className="text-zinc-300 leading-relaxed text-base whitespace-pre-wrap">
                         {term.detailedExplanation}
                       </p>
                     </div>
@@ -139,12 +139,12 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
 
                   {activeTab === 'example' && (
                     <div className="space-y-4">
-                      <div className="p-6 rounded-xl bg-slate-800 border border-slate-700">
+                      <div className="p-6 rounded-xl bg-zinc-900/60 border border-white/10">
                         <div className="flex items-start gap-3 mb-4">
-                          <AlertCircle className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
+                          <AlertCircle className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
                           <div>
-                            <p className="text-sm font-semibold text-slate-300 mb-2">Real-World Scenario</p>
-                            <p className="text-slate-400 leading-relaxed">
+                            <p className="text-sm font-semibold text-zinc-300 mb-2">Real-World Scenario</p>
+                            <p className="text-zinc-400 leading-relaxed">
                               {term.example}
                             </p>
                           </div>
@@ -162,9 +162,9 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
                           'Learn more: Explore related topics to build stronger financial knowledge',
                           'Ask questions: Use our AI chatbot to clarify any doubts',
                         ].map((tip, idx) => (
-                          <div key={idx} className="p-4 rounded-xl bg-slate-800 border border-slate-700 flex gap-3">
-                            <Lightbulb className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
-                            <p className="text-slate-300 text-sm">{tip}</p>
+                          <div key={idx} className="p-4 rounded-xl bg-zinc-900/60 border border-white/10 flex gap-3">
+                            <Lightbulb className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
+                            <p className="text-zinc-300 text-sm">{tip}</p>
                           </div>
                         ))}
                       </div>
@@ -175,20 +175,20 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
 
               {/* Related Topics */}
               {relatedTopics.length > 0 && (
-                <div className="mt-8 pt-8 border-t border-slate-700">
-                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">
+                <div className="mt-8 pt-8 border-t border-white/10">
+                  <h3 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-4">
                     Related Topics
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {relatedTopics.map((topic) => (
                       <button
                         key={topic.id}
-                        className="p-3 text-left rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors group"
+                        className="p-3 text-left rounded-lg bg-zinc-900/60 border border-white/10 hover:border-zinc-600 transition-colors group"
                       >
-                        <p className="text-xs font-semibold text-slate-500 group-hover:text-slate-400">
+                        <p className="text-xs font-semibold text-zinc-500 group-hover:text-zinc-400">
                           {topic.category.toUpperCase()}
                         </p>
-                        <p className="text-slate-200 font-semibold group-hover:text-slate-100">
+                        <p className="text-zinc-200 font-semibold group-hover:text-zinc-100">
                           {topic.term}
                         </p>
                       </button>
@@ -199,10 +199,10 @@ export function LearningDialog({ term, isOpen, onClose, relatedTopics = [] }: Le
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 p-6 border-t border-slate-700 bg-slate-900/80 backdrop-blur-sm flex gap-3">
+            <div className="sticky bottom-0 p-6 border-t border-white/10 bg-zinc-900/80 backdrop-blur-sm flex gap-3">
               <button
                 onClick={onClose}
-                className="flex-1 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold transition-colors"
+                className="flex-1 py-3 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-semibold transition-colors"
               >
                 Close
               </button>

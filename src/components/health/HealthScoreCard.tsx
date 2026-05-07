@@ -74,9 +74,9 @@ export function HealthScoreCard({ plan }: HealthScoreCardProps) {
 
     return calculateHealthScore(convertedPlan);
   }, [plan]);
-
+// "bg-[#0B0F17]/90 border border-white/[0.1]
   return (
-    <Card className="bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 backdrop-blur-xl">
+    <Card className="bg-white bg-[#0B0F17]/90 border border-white/[0.1]backdrop-blur-xl">
       <CardHeader>
         <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-indigo-400" />
@@ -116,7 +116,7 @@ export function HealthScoreCard({ plan }: HealthScoreCardProps) {
                 strokeWidth="8"
                 strokeDasharray={`${(scoreResult.score / 100) * 282.7} 282.7`}
                 strokeLinecap="round"
-                className="text-indigo-500 transition-all duration-500"
+                className="text-zinc-800 transition-all duration-500"
               />
             </svg>
 

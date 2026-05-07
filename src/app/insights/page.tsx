@@ -7,11 +7,12 @@ import { FinancialPlanOutput } from "@/types/financial";
 import { PageContainer } from "@/components/shared/PageContainer";
 import { QuickStatsCards } from "@/components/shared/QuickStatsCards";
 import { SmartAlertsCard } from "@/components/alerts/SmartAlertsCard";
-import { AIInsightsPanel } from "@/components/insights/AIInsightsPanel";
+import { AIInsightsPanel, AIInsightsLoadingState } from "@/components/insights/AIInsightsPanel";
 import { WeeklySummary } from "@/components/insights/WeeklySummary";
 import { HealthScoreCard } from "@/components/health/HealthScoreCard";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Zap } from "lucide-react";
+import { Reveal } from "@/components/shared/Reveal";
 
 export default function InsightsPage() {
   const router = useRouter();
@@ -42,8 +43,8 @@ export default function InsightsPage() {
 
   if (isLoading) {
     return (
-      <PageContainer className="flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <PageContainer className="py-12">
+        <AIInsightsLoadingState />
       </PageContainer>
     );
   }
@@ -61,15 +62,6 @@ export default function InsightsPage() {
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
-
   return (
     <PageContainer className="py-12">
       <motion.div
@@ -79,57 +71,57 @@ export default function InsightsPage() {
         className="space-y-10"
       >
         {/* Header */}
-        <motion.div variants={itemVariants}>
-          <h1 className="text-5xl font-black text-slate-900 dark:text-white mb-3">
+        <Reveal>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-3">
             Financial Insights & Analysis
           </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-            AI-powered recommendations and detailed analysis of your financial progress
+          <p className="text-lg text-slate-400 max-w-2xl leading-8">
+            AI-powered recommendations and detailed analysis of your financial progress.
           </p>
-        </motion.div>
+        </Reveal>
 
         {/* Quick Stats */}
-        <motion.div variants={itemVariants}>
+        <Reveal delay={0.03}>
           <QuickStatsCards plan={plan} />
-        </motion.div>
+        </Reveal>
 
         {/* Health Score */}
-        <motion.div variants={itemVariants} className="max-w-2xl">
+        <Reveal className="max-w-2xl" delay={0.06}>
           <HealthScoreCard plan={plan} />
-        </motion.div>
+        </Reveal>
 
         {/* AI Insights Panel */}
         {plan.aiInsights && (
-          <motion.div variants={itemVariants}>
+          <Reveal delay={0.09}>
             <AIInsightsPanel insights={plan.aiInsights} />
-          </motion.div>
+          </Reveal>
         )}
 
         {/* Monthly Summary */}
-        <motion.div variants={itemVariants}>
+        <Reveal delay={0.12}>
           <WeeklySummary 
             monthlyPlan={plan?.monthlyPlan ?? []} 
             targetExpenses={plan?.input?.monthlyExpenses ?? 30000}
           />
-        </motion.div>
+        </Reveal>
 
         {/* Smart Alerts */}
         {plan.alerts && plan.alerts.length > 0 ? (
-          <motion.div variants={itemVariants}>
+          <Reveal delay={0.15}>
             <SmartAlertsCard alerts={plan.alerts} />
-          </motion.div>
+          </Reveal>
         ) : (
-          <motion.div variants={itemVariants}>
-            <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-dashed border-2 border-emerald-300 dark:border-emerald-700">
+          <Reveal delay={0.15}>
+            <Card className="border-dashed border border-white/10 bg-white/3">
               <CardContent className="p-12 text-center">
-                <div className="mb-4 inline-block p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-                  <Zap className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+                <div className="mb-4 inline-block p-3 rounded-full bg-white/5 border border-white/10">
+                  <Zap className="w-8 h-8 text-slate-200" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Alerts</h3>
-                <p className="text-slate-600 dark:text-slate-400">Your finances are looking good! Keep maintaining your budget.</p>
+                <h3 className="text-xl font-bold text-white mb-2">No Alerts</h3>
+                <p className="text-slate-400">Your finances are looking good! Keep maintaining your budget.</p>
               </CardContent>
             </Card>
-          </motion.div>
+          </Reveal>
         )}
       </motion.div>
     </PageContainer>

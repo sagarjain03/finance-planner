@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { calculateFinancialPlan } from '@/lib/calculations';
+import { calculateHealthScore } from '@/lib/healthScore';
 import { parseInputs, validateFinancialInput } from '@/lib/validators';
 import { ApiResponse, FinancialPlanOutput } from '@/types/financial';
 import connectDB from '@/lib/db';
@@ -78,9 +79,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const savingsRate = parsedInputs.monthlySalary > 0 
       ? (planOutput.monthlySavings / parsedInputs.monthlySalary) * 100 
       : 0;
+    const healthScoreInput = {
+      ...planOutput,
+      input: parsedInputs,
+    };
+    const healthScoreResult = calculateHealthScore(healthScoreInput);
     
     const aiInsights = await generateFinancialInsights({
       monthlySalary: parsedInputs.monthlySalary,
+      needs: parsedInputs.needs,
+      wants: parsedInputs.wants,
       monthlyExpenses: parsedInputs.monthlyExpenses,
       monthlySavings: planOutput.monthlySavings,
       yearlySavings: planOutput.yearlySavings,
@@ -91,6 +99,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       taxData: planOutput.taxData,
       goals: parsedInputs.goals,
       alerts: planOutput.alerts,
+      healthScore: healthScoreResult.score,
+      healthGrade: healthScoreResult.grade,
     });
 
     // Connect to database and save plan

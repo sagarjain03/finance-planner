@@ -62,10 +62,10 @@ export default function LearnPage() {
         >
           {/* Header */}
           <motion.div variants={itemVariants}>
-            <h1 className="text-5xl font-black text-slate-100 mb-3">
+            <h1 className="text-5xl font-black text-zinc-100 mb-3">
               Financial Learning Hub
             </h1>
-            <p className="text-lg text-slate-400 max-w-2xl">
+            <p className="text-lg text-zinc-400 max-w-2xl">
               Learn financial concepts explained in simple language. Click on any flashcard to reveal detailed explanations with real-world examples.
             </p>
           </motion.div>
@@ -78,8 +78,8 @@ export default function LearnPage() {
                 onClick={() => setSelectedCategory(category.value)}
                 className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                   selectedCategory === category.value
-                    ? 'bg-slate-100 text-slate-900 shadow-lg'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-zinc-100 text-zinc-900 shadow-lg'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 }`}
               >
                 {category.label}
@@ -89,7 +89,7 @@ export default function LearnPage() {
 
           {/* Terms Grid */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <p className="text-sm text-slate-400 font-semibold">
+            <p className="text-sm text-zinc-400 font-semibold">
               {filteredTerms.length} term{filteredTerms.length !== 1 ? 's' : ''} in this category
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -109,10 +109,10 @@ export default function LearnPage() {
           {/* Tips Section */}
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-slate-800 border border-slate-700"
+            className="p-8 rounded-2xl bg-zinc-800 border border-zinc-700"
           >
-            <h3 className="text-xl font-bold text-slate-100 mb-4">💡 Learning Tips</h3>
-            <ul className="space-y-3 text-slate-400">
+            <h3 className="text-xl font-bold text-zinc-100 mb-4">💡 Learning Tips</h3>
+            <ul className="space-y-3 text-zinc-400">
               <li className="flex gap-3">
                 <span className="text-2xl">📚</span>
                 <span>Start with basic concepts in budgeting and savings before moving to investments</span>

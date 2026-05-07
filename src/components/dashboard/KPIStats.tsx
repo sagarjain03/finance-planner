@@ -17,34 +17,26 @@ export function KPIStats(props: KPIStatsProps) {
       label: 'Monthly Salary',
       value: formatCurrency(props.monthlySalary ?? 0),
       icon: Wallet,
-      color: 'from-blue-500/20 to-blue-500/5',
-      iconColor: 'text-blue-400',
-      borderColor: 'group-hover:border-blue-500/30'
+      accent: 'text-slate-100',
     },
     {
       label: 'Fixed Expenses',
       value: formatCurrency(props.monthlyExpenses ?? 0),
       icon: TrendingDown,
-      color: 'from-red-500/20 to-red-500/5',
-      iconColor: 'text-red-400',
-      borderColor: 'group-hover:border-red-500/30'
+      accent: 'text-slate-200',
     },
     {
       label: 'Monthly Savings',
       value: formatCurrency(props.monthlySavings ?? 0),
       subtitle: `${(props.savingsRate ?? 0).toFixed(1)}% of income`,
       icon: PiggyBank,
-      color: 'from-emerald-500/20 to-emerald-500/5',
-      iconColor: 'text-emerald-400',
-      borderColor: 'group-hover:border-emerald-500/30'
+      accent: 'text-slate-100',
     },
     {
       label: 'Yearly Savings',
       value: formatCurrency(props.yearlySavings ?? 0),
       icon: Target,
-      color: 'from-purple-500/20 to-purple-500/5',
-      iconColor: 'text-purple-400',
-      borderColor: 'group-hover:border-purple-500/30'
+      accent: 'text-slate-200',
     },
   ];
 
@@ -53,18 +45,17 @@ export function KPIStats(props: KPIStatsProps) {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className={`glass-card glass-card-hover rounded-2xl p-6 group relative overflow-hidden flex flex-col justify-between min-h-[140px] transition-all duration-300 ${stat.borderColor}`}
+          className="rounded-2xl p-6 group relative overflow-hidden flex flex-col justify-between min-h-[140px] border border-white/10 bg-white/[0.03] backdrop-blur-xl transition-all duration-300 hover:bg-white/[0.05] hover:border-white/15"
         >
-          {/* Subtle Background Gradient */}
-          <div className={`absolute -inset-px bg-gradient-to-br ${stat.color} opacity-50 z-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl`} />
-          
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-70" />
+
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm font-medium text-slate-400">
                 {stat.label}
               </p>
-              <div className="p-2 rounded-lg bg-white/[0.05] border border-white/[0.05]">
-                <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
+              <div className="p-2 rounded-lg bg-white/[0.04] border border-white/10">
+                <stat.icon className={`w-5 h-5 ${stat.accent}`} />
               </div>
             </div>
             
@@ -73,7 +64,7 @@ export function KPIStats(props: KPIStatsProps) {
                 {stat.value}
               </p>
               {stat.subtitle && (
-                <p className="text-xs font-medium text-emerald-400/80 mt-1.5 bg-emerald-400/10 inline-block px-2 py-0.5 rounded-full">
+                <p className="text-xs font-medium text-slate-300 mt-1.5 inline-block px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/10">
                   {stat.subtitle}
                 </p>
               )}

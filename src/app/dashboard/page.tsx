@@ -13,7 +13,7 @@ import { AllocationPieChart } from '@/components/dashboard/AllocationPieChart';
 import { SavingsBarChart } from '@/components/dashboard/SavingsBarChart';
 import { GoalAnalysis } from '@/components/dashboard/GoalAnalysis';
 import { InvestmentStrategy } from '@/components/dashboard/InvestmentStrategy';
-import { AIInsightsCard } from '@/components/dashboard/AIInsightsCard';
+import { AIInsightsPanel } from '@/components/insights/AIInsightsPanel';
 import { CreditCardWidget } from '@/components/dashboard/CreditCardWidget';
 import { TaxStrategyCard } from '@/components/dashboard/TaxStrategyCard';
 import { BudgetFeedbackCard } from '@/components/dashboard/BudgetFeedbackCard';
@@ -23,6 +23,7 @@ import { HealthScoreCard } from '@/components/health/HealthScoreCard';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
 import { EmptyState } from '@/components/dashboard/EmptyState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
+import { Reveal } from '@/components/shared/Reveal';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -73,7 +74,9 @@ export default function DashboardPage() {
     if (status !== 'authenticated') return;
 
     const controller = new AbortController();
-    fetchPlan(controller.signal);
+    void (async () => {
+      await fetchPlan(controller.signal);
+    })();
     return () => controller.abort();
   }, [status, router, fetchPlan]);
 
@@ -110,14 +113,14 @@ export default function DashboardPage() {
       <PageContainer className="py-12">
         <div className="space-y-10">
           {/* Header + Visual Card */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <Reveal className="flex flex-col lg:flex-row lg:items-center justify-between gap-8" delay={0.02}>
             <div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-3">
                 <span className="text-white">
                   Dashboard
                 </span>
               </h1>
-              <p className="text-lg text-slate-400 max-w-2xl">{plan.message ?? ''}</p>
+              <p className="text-lg text-slate-400 max-w-2xl leading-8">{plan.message ?? ''}</p>
             </div>
             <div className="lg:w-1/3">
               <CreditCardWidget
@@ -125,25 +128,31 @@ export default function DashboardPage() {
                 userName={session?.user?.name || "Premium Member"}
               />
             </div>
-          </div>
+          </Reveal>
 
           {/* Achievement Banner — shown above KPIs when unlocked */}
-          <AchievementBanner achievement={plan.achievement} />
+          <Reveal delay={0.04}>
+            <AchievementBanner achievement={plan.achievement} />
+          </Reveal>
 
           {/* KPI Cards */}
-          <KPIStats
-            monthlySalary={plan.monthlySalary}
-            monthlyExpenses={plan.monthlyExpenses}
-            monthlySavings={plan.monthlySavings}
-            yearlySavings={plan.yearlySavings}
-            savingsRate={plan.savingsRate}
-          />
+          <Reveal delay={0.06}>
+            <KPIStats
+              monthlySalary={plan.monthlySalary}
+              monthlyExpenses={plan.monthlyExpenses}
+              monthlySavings={plan.monthlySavings}
+              yearlySavings={plan.yearlySavings}
+              savingsRate={plan.savingsRate}
+            />
+          </Reveal>
 
           {/* Health Score */}
-          <HealthScoreCard plan={plan} />
+          <Reveal delay={0.08}>
+            <HealthScoreCard plan={plan} />
+          </Reveal>
 
           {/* Charts Row 1 — Line + Pie */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <Reveal className="grid grid-cols-1 lg:grid-cols-5 gap-8" delay={0.1}>
             <div className="lg:col-span-3">
               <SavingsLineChart
                 monthlyPlan={plan.monthlyPlan ?? []}
@@ -153,10 +162,10 @@ export default function DashboardPage() {
             <div className="lg:col-span-2">
               <AllocationPieChart allocation={plan.investmentAllocation ?? []} />
             </div>
-          </div>
+          </Reveal>
 
           {/* Charts Row 2 — Bar + Goal */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Reveal className="grid grid-cols-1 lg:grid-cols-2 gap-8" delay={0.12}>
             <SavingsBarChart
               monthlySalary={plan.monthlySalary}
               monthlyExpenses={plan.monthlyExpenses}
@@ -169,54 +178,60 @@ export default function DashboardPage() {
               monthsToReachGoal={plan.monthsToReachGoal}
               monthlySavings={plan.monthlySavings}
             />
-          </div>
+          </Reveal>
 
           {/* ── Phase 1 New Row: Budget + Tax ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Reveal className="grid grid-cols-1 lg:grid-cols-2 gap-8" delay={0.14}>
             <BudgetFeedbackCard
               budgetFeedback={plan.budgetFeedback}
               monthlySalary={plan.monthlySalary}
             />
             <TaxStrategyCard taxData={plan.taxData} />
-          </div>
+          </Reveal>
 
           {/* Phase 2: Smart Alerts */}
           {plan.alerts && plan.alerts.length > 0 && (
-            <SmartAlertsCard alerts={plan.alerts} />
+            <Reveal delay={0.16}>
+              <SmartAlertsCard alerts={plan.alerts} />
+            </Reveal>
           )}
 
           {/* AI Insights */}
           {plan.aiInsights && plan.aiInsights.summary && (
-            <AIInsightsCard insights={plan.aiInsights} />
+            <Reveal delay={0.18}>
+              <AIInsightsPanel insights={plan.aiInsights} />
+            </Reveal>
           )}
 
           {/* Investment Strategy + Explanation */}
-          <InvestmentStrategy
-            investmentExplanation={plan.investmentExplanation ?? null}
-            investmentAllocation={plan.investmentAllocation ?? []}
-            goalDuration={plan.goalDuration ?? 1}
-          />
+          <Reveal delay={0.2}>
+            <InvestmentStrategy
+              investmentExplanation={plan.investmentExplanation ?? null}
+              investmentAllocation={plan.investmentAllocation ?? []}
+              goalDuration={plan.goalDuration ?? 1}
+            />
+          </Reveal>
 
           {/* Actions */}
-          <div className="flex gap-4 justify-center pt-8 border-t border-white/[0.05]">
+          <Reveal className="flex gap-4 justify-center pt-8 border-t border-white/10" delay={0.22}>
             <Button
               onClick={() =>
                 router.push(
                   `/onboarding?edit=true&id=${plan._id}`
                 )
               }
-              className="h-12 px-8 bg-white hover:bg-slate-200 text-[#0A0D14] font-semibold rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+              className="h-12 px-8 bg-white hover:bg-slate-200 text-[#0A0D14] font-semibold rounded-xl shadow-none"
             >
               Edit Plan
             </Button>
             <Button
               onClick={() => router.push('/onboarding')}
               variant="outline"
-              className="h-12 px-8 bg-white/[0.02] border-white/[0.1] text-slate-300 hover:bg-white/[0.05] hover:text-white rounded-xl"
+              className="h-12 px-8 bg-white/3 border-white/10 text-slate-300 hover:bg-white/6 hover:text-white rounded-xl"
             >
               Create New Plan
             </Button>
-          </div>
+          </Reveal>
         </div>
       </PageContainer>
 

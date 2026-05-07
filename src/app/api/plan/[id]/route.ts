@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { calculateFinancialPlan } from '@/lib/calculations';
+import { calculateHealthScore } from '@/lib/healthScore';
 import { parseInputs, validateFinancialInput } from '@/lib/validators';
 import connectDB from '@/lib/db';
 import FinancialPlan from '@/models/FinancialPlan';
@@ -84,9 +85,16 @@ export async function PUT(
     const savingsRate = parsedInputs.monthlySalary > 0 
       ? (planOutput.monthlySavings / parsedInputs.monthlySalary) * 100 
       : 0;
+    const healthScoreInput = {
+      ...planOutput,
+      input: parsedInputs,
+    };
+    const healthScoreResult = calculateHealthScore(healthScoreInput);
     
     const aiInsights = await generateFinancialInsights({
       monthlySalary: parsedInputs.monthlySalary,
+      needs: parsedInputs.needs,
+      wants: parsedInputs.wants,
       monthlyExpenses: parsedInputs.monthlyExpenses,
       monthlySavings: planOutput.monthlySavings,
       yearlySavings: planOutput.yearlySavings,
@@ -97,6 +105,8 @@ export async function PUT(
       taxData: planOutput.taxData,
       goals: parsedInputs.goals,
       alerts: planOutput.alerts,
+      healthScore: healthScoreResult.score,
+      healthGrade: healthScoreResult.grade,
     });
 
     await connectDB();

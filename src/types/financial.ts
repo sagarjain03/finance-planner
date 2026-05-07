@@ -89,9 +89,16 @@ export interface GoalAnalysisResult {
   progressPercentage: number;
 }
 
+export interface AIReportSection {
+  title: string;
+  summary: string;
+  bullets: string[];
+}
+
 export interface AIInsights {
   summary: string;
-  insights: string[];
+  sections?: AIReportSection[];
+  insights?: string[];
   recommendations: string[];
   motivation: string;
 }

@@ -40,12 +40,12 @@ export function Sidebar() {
   return (
     <>
       {/* Mobile Top Bar (Visible only on mobile) */}
-      <div className="md:hidden flex items-center justify-between p-4 border-b border-white/[0.08] bg-[#0B0F17] z-50 sticky top-0">
+      <div className="md:hidden flex items-center justify-between p-4 border-b border-white/10 bg-zinc-950/95 backdrop-blur-xl z-50 sticky top-0">
         <div className="flex items-center gap-2">
-          <CreditCard className="w-6 h-6 text-slate-200" />
-          <span className="font-bold text-lg text-slate-200">FinPlan</span>
+          <CreditCard className="w-6 h-6 text-slate-100" />
+          <span className="font-semibold text-lg text-slate-100">FinPlan</span>
         </div>
-        <button onClick={toggleSidebar} className="text-slate-300 p-2">
+        <button onClick={toggleSidebar} className="text-slate-300 p-2 rounded-lg hover:bg-white/5">
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
@@ -60,18 +60,16 @@ export function Sidebar() {
 
       {/* Sidebar Container */}
       <aside className={`
-        fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#0A0D14] border-r border-white/[0.08] flex flex-col
+        fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-zinc-950/95 backdrop-blur-xl border-r border-white/10 flex flex-col
         transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         {/* Logo Area */}
         <div className="p-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-slate-200 to-slate-400 flex items-center justify-center shadow-lg shadow-white/10">
-            <CreditCard className="w-5 h-5 text-[#0A0D14]" />
+          <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+            <CreditCard className="w-5 h-5 text-slate-100" />
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
-            FinPlan
-          </span>
+          <span className="text-xl font-semibold text-slate-100">FinPlan</span>
         </div>
 
         {/* Navigation Links */}
@@ -86,10 +84,10 @@ export function Sidebar() {
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
+                  flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group border
                   ${isActive 
-                    ? 'bg-white/[0.08] text-white shadow-sm' 
-                    : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+                    ? 'bg-white/5 text-white border-white/10' 
+                    : 'border-transparent text-slate-400 hover:bg-white/4 hover:text-slate-200 hover:border-white/5'
                   }
                 `}
               >
@@ -101,11 +99,11 @@ export function Sidebar() {
         </div>
 
         {/* User / Auth Area */}
-        <div className="p-4 border-t border-white/[0.08]">
+        <div className="p-4 border-t border-white/10">
           {status === 'authenticated' ? (
             <div className="space-y-4">
               <div className="flex items-center gap-3 px-2">
-                <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 font-medium">
+                <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-200 font-medium">
                   {session?.user?.name?.[0]?.toUpperCase() || 'U'}
                 </div>
                 <div className="flex flex-col">
@@ -124,12 +122,12 @@ export function Sidebar() {
           ) : (
             <div className="space-y-3">
               <Link href="/login" onClick={() => setIsOpen(false)} className="block w-full">
-                <Button variant="outline" className="w-full bg-white/[0.02] border-white/[0.1] text-slate-300 hover:bg-white/[0.05] hover:text-white">
+                <Button variant="outline" className="w-full bg-white/2 border-white/10 text-slate-300 hover:bg-white/5 hover:text-white">
                   Login
                 </Button>
               </Link>
               <Link href="/signup" onClick={() => setIsOpen(false)} className="block w-full">
-                <Button className="w-full bg-white hover:bg-slate-200 text-[#0A0D14] shadow-[0_0_15px_rgba(255,255,255,0.15)] font-semibold rounded-xl">
+                <Button className="w-full bg-white hover:bg-slate-200 text-[#0A0D14] shadow-none font-semibold rounded-xl">
                   Sign Up
                 </Button>
               </Link>

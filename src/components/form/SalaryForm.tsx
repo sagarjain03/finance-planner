@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FormErrors } from "@/types";
+import { FormErrors, PlanData } from "@/types";
 import { Button } from "@/components/ui/Button";
 import {
   Card,
@@ -40,6 +40,10 @@ interface SalaryFormProps {
     goalDuration?: number;
     goals?: Array<{ id: string; name: string; amount: number; duration: number }>;
   } | null;
+  /** Optional callback to handle form submission externally */
+  onSubmit?: (data: PlanData) => Promise<void>;
+  /** Optional prop to control loading state from parent */
+  isLoading?: boolean;
 }
 
 const EMPTY_FORM: FormData = {
@@ -49,12 +53,15 @@ const EMPTY_FORM: FormData = {
   goals: [{ id: crypto.randomUUID(), name: "", amount: "", duration: "" }],
 };
 
-export function SalaryForm({ editPlanId, initialData }: SalaryFormProps) {
+export function SalaryForm({ editPlanId, initialData, onSubmit: externalOnSubmit, isLoading: externalIsLoading }: SalaryFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [internalIsLoading, setInternalIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+
+  // Use external isLoading if provided, otherwise use internal state
+  const isLoading = externalIsLoading ?? internalIsLoading;
 
   const isEditMode = Boolean(editPlanId);
 
@@ -150,14 +157,14 @@ export function SalaryForm({ editPlanId, initialData }: SalaryFormProps) {
 
     if (!validateForm()) return;
 
-    setIsLoading(true);
+    setInternalIsLoading(true);
     setApiError(null);
 
     try {
-      const payload = {
-        monthlySalary: formData.monthlySalary,
-        needs: formData.needs,
-        wants: formData.wants,
+      const payload: PlanData = {
+        monthlySalary: parseFloat(formData.monthlySalary),
+        needs: parseFloat(formData.needs),
+        wants: parseFloat(formData.wants),
         goals: formData.goals.map(g => ({
           id: g.id,
           name: g.name,
@@ -165,6 +172,12 @@ export function SalaryForm({ editPlanId, initialData }: SalaryFormProps) {
           duration: parseInt(g.duration)
         })),
       };
+
+      // Use external onSubmit if provided
+      if (externalOnSubmit) {
+        await externalOnSubmit(payload);
+        return;
+      }
 
       const url = isEditMode ? `/api/plan/${editPlanId}` : "/api/plan";
       const method = isEditMode ? "PUT" : "POST";
@@ -179,7 +192,7 @@ export function SalaryForm({ editPlanId, initialData }: SalaryFormProps) {
 
       if (!data.success) {
         setApiError(data.message || "Failed to save financial plan");
-        setIsLoading(false);
+        setInternalIsLoading(false);
         return;
       }
 
@@ -187,7 +200,7 @@ export function SalaryForm({ editPlanId, initialData }: SalaryFormProps) {
     } catch (error) {
       console.error("API Error:", error);
       setApiError("Network error. Please try again.");
-      setIsLoading(false);
+      setInternalIsLoading(false);
     }
   };
 

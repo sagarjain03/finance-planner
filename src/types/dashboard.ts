@@ -35,7 +35,12 @@ export interface DashboardPlan {
   message: string;
   aiInsights?: {
     summary: string;
-    insights: string[];
+    sections?: Array<{
+      title: string;
+      summary: string;
+      bullets: string[];
+    }>;
+    insights?: string[];
     recommendations?: string[];
     motivation?: string;
   };
