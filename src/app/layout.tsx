@@ -29,8 +29,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#0B0F17] flex">
+      <body className="min-h-screen bg-white dark:bg-[#0B0F17] flex transition-colors duration-500">
         <Providers>
           <UserDataProvider>
             <div className="flex w-full h-screen overflow-hidden">

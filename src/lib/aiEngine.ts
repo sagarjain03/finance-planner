@@ -1,4 +1,5 @@
 import Groq from "groq-sdk";
+import { calculateHealthScore } from "./healthScore";
 
 // Initialize Groq client. It will automatically use process.env.GROQ_API_KEY
 // We set a dummy key to prevent crashes if it's missing, but the API call will fail gracefully later.
@@ -9,6 +10,8 @@ const groq = new Groq({
 export interface AIInsights {
   summary: string;
   insights: string[];
+  recommendations: string[];
+  motivation: string;
 }
 
 interface FinancialData {
@@ -16,6 +19,7 @@ interface FinancialData {
   monthlyExpenses: number;
   monthlySavings: number;
   yearlySavings: number;
+  savingsRate: number;
   goalAmount: number;
   goalDuration: number;
   investmentAllocation: Array<{
@@ -31,6 +35,10 @@ interface FinancialData {
     utilized80C: number;
     effectiveTaxRate: number;
   };
+  goals?: Array<{ name: string; amount: number; duration: number; id: string }>;
+  alerts?: Array<{ type: string; message: string }>;
+  healthScore?: number;
+  healthGrade?: string;
 }
 
 const FALLBACK_INSIGHTS: AIInsights = {
@@ -40,6 +48,12 @@ const FALLBACK_INSIGHTS: AIInsights = {
     "Invest your allocated amounts early in the month to benefit from compounding.",
     "Review your financial goals and plan every 6 months to adjust for life changes.",
   ],
+  recommendations: [
+    "Build an emergency fund of 3-6 months of expenses",
+    "Automate your savings to ensure consistency",
+    "Review your insurance coverage periodically",
+  ],
+  motivation: "You're building a strong financial foundation. Keep up the great work!"
 };
 
 export async function generateFinancialInsights(
@@ -51,35 +65,56 @@ export async function generateFinancialInsights(
     return FALLBACK_INSIGHTS;
   }
 
-  const prompt = `
-Explain this financial plan in simple language for a beginner. Be concise, clear, and helpful.
+  const healthContext = data.healthScore 
+    ? `Current Financial Health Score: ${data.healthScore}/100 (${data.healthGrade})` 
+    : "Health score calculation pending";
 
-User Financial Data:
+  const prompt = `
+You are an expert financial advisor. Provide personalized, actionable financial guidance in simple language for a beginner.
+
+User Financial Profile:
 - Monthly Salary: ₹${data.monthlySalary}
 - Monthly Expenses: ₹${data.monthlyExpenses}
 - Monthly Savings: ₹${data.monthlySavings}
-- Goal Amount: ₹${data.goalAmount}
-- Goal Duration: ${data.goalDuration} months
+- Savings Rate: ${data.savingsRate.toFixed(1)}%
+- Yearly Savings: ₹${data.yearlySavings}
+- ${healthContext}
 
-Recommended Investment Allocation:
+Goals:
+${data.goals && data.goals.length > 0 
+  ? data.goals.map(g => `- ${g.name}: ₹${g.amount} in ${g.duration} months`).join('\n')
+  : `- Primary Goal: ₹${data.goalAmount} in ${data.goalDuration} months`}
+
+Active Alerts:
+${data.alerts && data.alerts.length > 0 
+  ? data.alerts.map(a => `- ⚠️ ${a.message}`).join('\n')
+  : '- ✓ No active alerts. Budget is well-balanced.'}
+
+Investment Allocation:
 ${data.investmentAllocation.map((alloc) => `- ${alloc.type}: ${alloc.percentage}% (₹${alloc.amount})`).join("\n")}
 
-Tax Analysis Data:
+Tax Optimization:
 - Recommended Regime: ${data.taxData.recommendedRegime === 'new' ? 'New Regime' : 'Old Regime'}
-- Utilized 80C Deduction: ₹${data.taxData.utilized80C}
-- Tax Savings vs other regime: ₹${data.taxData.potentialTaxSavings}
+- 80C Deduction Utilized: ₹${data.taxData.utilized80C}
+- Potential Tax Savings: ₹${data.taxData.potentialTaxSavings}
 - Effective Tax Rate: ${data.taxData.effectiveTaxRate}%
 
-Respond ONLY with a valid JSON object matching this structure:
+Respond ONLY with a valid JSON object matching this exact structure:
 {
-  "summary": "A 2-3 sentence overall summary of their financial situation and path to their goal.",
+  "summary": "A 2-3 sentence overview of their financial situation, health score interpretation, and overall path to achieving goals.",
   "insights": [
-    "A bullet point explaining why this specific investment allocation makes sense based on their goal duration.",
-    "A bullet point explaining their tax savings in simple terms, explicitly mentioning the exact numbers from the Tax Analysis Data provided above.",
-    "A bullet point with a simple risk management or budgeting tip."
-  ]
-}
-`;
+    "First insight explaining the investment allocation strategy based on goal timelines and risk profile.",
+    "Second insight addressing specific goals and how current savings will impact timeline.",
+    "Third insight explaining tax savings in concrete terms using exact numbers from Tax Optimization data.",
+    "Fourth insight about their savings rate effectiveness and comparison to financial benchmarks."
+  ],
+  "recommendations": [
+    "First actionable recommendation specific to their situation (e.g., increase emergency fund, adjust goal timeline).",
+    "Second recommendation about automation or investment optimization.",
+    "Third recommendation addressing any gaps or risks identified in their plan."
+  ],
+  "motivation": "A personalized, encouraging message (1-2 sentences) acknowledging their progress and inspiring them to continue."
+}`;
 
   try {
     // Add timeout handling to prevent hanging API requests
@@ -91,7 +126,7 @@ Respond ONLY with a valid JSON object matching this structure:
         messages: [
           {
             role: "system",
-            content: "You are a helpful and expert financial advisor. You always respond in valid JSON format.",
+            content: "You are a helpful and expert financial advisor. You always respond in valid JSON format only.",
           },
           {
             role: "user",
@@ -115,7 +150,12 @@ Respond ONLY with a valid JSON object matching this structure:
     const parsed = JSON.parse(content) as AIInsights;
     
     // Validate output shape
-    if (typeof parsed.summary !== "string" || !Array.isArray(parsed.insights)) {
+    if (
+      typeof parsed.summary !== "string" || 
+      !Array.isArray(parsed.insights) ||
+      !Array.isArray(parsed.recommendations) ||
+      typeof parsed.motivation !== "string"
+    ) {
       throw new Error("Invalid response shape from Groq");
     }
 

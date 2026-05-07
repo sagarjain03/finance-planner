@@ -10,13 +10,38 @@ export interface IFinancialPlan extends Document {
   userId: Types.ObjectId;
   monthlySalary: number;
   monthlyExpenses: number;
+  needs: number;
+  wants: number;
   monthlySavings: number;
   yearlySavings: number;
   savingsRate: number;
-  goalAmount: number;
-  goalDuration: number;
+  goalAmount?: number;
+  goalDuration?: number;
   isAchievable: boolean;
   monthsToReachGoal: number | null;
+  goals?: Array<{
+    id: string;
+    name: string;
+    amount: number;
+    duration: number;
+    createdAt: Date;
+  }>;
+  goalsAnalysis?: Array<{
+    id: string;
+    name: string;
+    amount: number;
+    duration: number;
+    requiredMonthlySaving: number;
+    currentSaving: number;
+    gap: number;
+    isAchievable: boolean;
+    monthsToReachGoal: number | null;
+    progressPercentage: number;
+  }>;
+  alerts?: Array<{
+    type: 'overspending' | 'low_savings' | 'goal_delay';
+    message: string;
+  }>;
   investmentAllocation: Array<{
     type: string;
     percentage: number;
@@ -47,6 +72,19 @@ export interface IFinancialPlan extends Document {
     summary: string;
     insights: string[];
   };
+  budgetFeedback: {
+    needsStatus: 'over' | 'ideal' | 'under';
+    wantsStatus: 'over' | 'ideal' | 'under';
+    savingsStatus: 'low' | 'good' | 'excellent';
+    actualNeedsPct: number;
+    actualWantsPct: number;
+    actualSavingsPct: number;
+    message: string;
+  };
+  achievement: {
+    unlocked: boolean;
+    message: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +101,18 @@ const FinancialPlanSchema = new Schema<IFinancialPlan>(
       type: Number,
       required: true,
       min: 0,
+    },
+    needs: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    wants: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
     },
     monthlyExpenses: {
       type: Number,
@@ -83,14 +133,44 @@ const FinancialPlanSchema = new Schema<IFinancialPlan>(
     },
     goalAmount: {
       type: Number,
-      required: true,
       min: 0,
     },
     goalDuration: {
       type: Number,
-      required: true,
       min: 1,
     },
+    goals: [
+      {
+        _id: false,
+        id: { type: String, required: true },
+        name: { type: String, required: true },
+        amount: { type: Number, required: true },
+        duration: { type: Number, required: true },
+        createdAt: { type: Date, required: true, default: Date.now },
+      },
+    ],
+    goalsAnalysis: [
+      {
+        _id: false,
+        id: { type: String, required: true },
+        name: { type: String, required: true },
+        amount: { type: Number, required: true },
+        duration: { type: Number, required: true },
+        requiredMonthlySaving: { type: Number, required: true },
+        currentSaving: { type: Number, required: true },
+        gap: { type: Number, required: true },
+        isAchievable: { type: Boolean, required: true },
+        monthsToReachGoal: { type: Number, default: null },
+        progressPercentage: { type: Number, required: true },
+      },
+    ],
+    alerts: [
+      {
+        _id: false,
+        type: { type: String, enum: ['overspending', 'low_savings', 'goal_delay'], required: true },
+        message: { type: String, required: true },
+      },
+    ],
     isAchievable: {
       type: Boolean,
       required: true,
@@ -130,6 +210,21 @@ const FinancialPlanSchema = new Schema<IFinancialPlan>(
       _id: false,
       summary: { type: String, default: '' },
       insights: { type: [String], default: [] },
+    },
+    budgetFeedback: {
+      _id: false,
+      needsStatus: { type: String, enum: ['over', 'ideal', 'under'], default: 'ideal' },
+      wantsStatus: { type: String, enum: ['over', 'ideal', 'under'], default: 'ideal' },
+      savingsStatus: { type: String, enum: ['low', 'good', 'excellent'], default: 'low' },
+      actualNeedsPct: { type: Number, default: 0 },
+      actualWantsPct: { type: Number, default: 0 },
+      actualSavingsPct: { type: Number, default: 0 },
+      message: { type: String, default: '' },
+    },
+    achievement: {
+      _id: false,
+      unlocked: { type: Boolean, default: false },
+      message: { type: String, default: '' },
     },
     taxData: {
       _id: false,

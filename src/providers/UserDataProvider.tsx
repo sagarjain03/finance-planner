@@ -14,7 +14,8 @@ const UserDataContext = createContext<UserDataContextType | undefined>(undefined
 
 const INITIAL_STATE: UserData = {
   monthlySalary: "",
-  fixedExpenses: "",
+  needs: "",
+  wants: "",
   savingsGoalAmount: "",
   goalDurationMonths: "",
 };
@@ -61,7 +62,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
   const isComplete =
     userData.monthlySalary !== "" &&
-    userData.fixedExpenses !== "" &&
+    userData.needs !== "" &&
+    userData.wants !== "" &&
     userData.savingsGoalAmount !== "" &&
     userData.goalDurationMonths !== "";
 

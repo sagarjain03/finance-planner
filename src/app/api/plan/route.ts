@@ -28,14 +28,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Parse request body
     const body = await request.json();
-    const { monthlySalary, monthlyExpenses, goalAmount, goalDuration } = body;
+    const { monthlySalary, needs, wants, goalAmount, goalDuration, goals } = body;
 
     // Parse and validate input
     const parsedInputs = parseInputs(
       monthlySalary?.toString() ?? '',
-      monthlyExpenses?.toString() ?? '',
+      needs?.toString() ?? '',
+      wants?.toString() ?? '',
       goalAmount?.toString() ?? '',
-      goalDuration?.toString() ?? ''
+      goalDuration?.toString() ?? '',
+      goals
     );
 
     if (!parsedInputs) {
@@ -51,9 +53,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Validate financial input
     const validationErrors = validateFinancialInput(
       parsedInputs.monthlySalary,
-      parsedInputs.monthlyExpenses,
+      parsedInputs.needs,
+      parsedInputs.wants,
       parsedInputs.goalAmount,
-      parsedInputs.goalDuration
+      parsedInputs.goalDuration,
+      parsedInputs.goals
     );
 
     if (validationErrors.length > 0) {
@@ -71,15 +75,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const planOutput = calculateFinancialPlan(parsedInputs);
 
     // Generate AI insights asynchronously (will fallback if fails)
+    const savingsRate = parsedInputs.monthlySalary > 0 
+      ? (planOutput.monthlySavings / parsedInputs.monthlySalary) * 100 
+      : 0;
+    
     const aiInsights = await generateFinancialInsights({
       monthlySalary: parsedInputs.monthlySalary,
       monthlyExpenses: parsedInputs.monthlyExpenses,
       monthlySavings: planOutput.monthlySavings,
       yearlySavings: planOutput.yearlySavings,
-      goalAmount: parsedInputs.goalAmount,
-      goalDuration: parsedInputs.goalDuration,
+      savingsRate,
+      goalAmount: parsedInputs.goalAmount ?? 0,
+      goalDuration: parsedInputs.goalDuration ?? 0,
       investmentAllocation: planOutput.investmentAllocation,
       taxData: planOutput.taxData,
+      goals: parsedInputs.goals,
+      alerts: planOutput.alerts,
     });
 
     // Connect to database and save plan
@@ -88,9 +99,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const financialPlan = await FinancialPlan.create({
       userId: session.user.id,
       monthlySalary: parsedInputs.monthlySalary,
+      needs: parsedInputs.needs,
+      wants: parsedInputs.wants,
       monthlyExpenses: parsedInputs.monthlyExpenses,
-      goalAmount: parsedInputs.goalAmount,
-      goalDuration: parsedInputs.goalDuration,
+      goalAmount: planOutput.goalAmount,
+      goalDuration: planOutput.goalDuration,
+      goals: parsedInputs.goals,
       monthlySavings: planOutput.monthlySavings,
       yearlySavings: planOutput.yearlySavings,
       savingsRate: planOutput.savingsRate,
@@ -102,6 +116,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       message: planOutput.message,
       taxData: planOutput.taxData,
       aiInsights: aiInsights,
+      budgetFeedback: planOutput.budgetFeedback,
+      achievement: planOutput.achievement,
+      goalsAnalysis: planOutput.goalsAnalysis,
+      alerts: planOutput.alerts,
     });
 
     const response: ApiResponse<any> = {

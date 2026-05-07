@@ -7,11 +7,13 @@ export interface DashboardPlan {
   _id: string;
   monthlySalary: number;
   monthlyExpenses: number;
+  needs?: number;
+  wants?: number;
   monthlySavings: number;
   yearlySavings: number;
   savingsRate: number;
-  goalAmount: number;
-  goalDuration: number;
+  goalAmount?: number;
+  goalDuration?: number;
   isAchievable: boolean;
   monthsToReachGoal: number | null;
   investmentAllocation: Array<{
@@ -34,6 +36,8 @@ export interface DashboardPlan {
   aiInsights?: {
     summary: string;
     insights: string[];
+    recommendations?: string[];
+    motivation?: string;
   };
   taxData?: {
     oldRegimeTax: number;
@@ -44,5 +48,41 @@ export interface DashboardPlan {
     effectiveTaxRate: number;
     netIncome: number;
   };
+  budgetFeedback?: {
+    needsStatus: "over" | "ideal" | "under";
+    wantsStatus: "over" | "ideal" | "under";
+    savingsStatus: "low" | "good" | "excellent";
+    actualNeedsPct: number;
+    actualWantsPct: number;
+    actualSavingsPct: number;
+    message: string;
+  };
+  achievement?: {
+    unlocked: boolean;
+    message: string;
+  };
+  goals?: Array<{
+    id: string;
+    name: string;
+    amount: number;
+    duration: number;
+    createdAt: Date;
+  }>;
+  goalsAnalysis?: Array<{
+    id: string;
+    name: string;
+    amount: number;
+    duration: number;
+    requiredMonthlySaving: number;
+    currentSaving: number;
+    gap: number;
+    isAchievable: boolean;
+    monthsToReachGoal: number | null;
+    progressPercentage: number;
+  }>;
+  alerts?: Array<{
+    type: "overspending" | "low_savings" | "goal_delay";
+    message: string;
+  }>;
   createdAt: string;
 }

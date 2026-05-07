@@ -8,11 +8,12 @@ import {
   LayoutDashboard, 
   Wallet, 
   Target, 
-  Settings, 
   LogOut, 
   Menu,
   X,
-  CreditCard
+  CreditCard,
+  Lightbulb,
+  SlidersHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -29,8 +30,9 @@ export function Sidebar() {
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Planner', href: '/onboarding', icon: Wallet },
-    // { name: 'Goals', href: '/goals', icon: Target }, // Placeholder for future
-    // { name: 'Settings', href: '/settings', icon: Settings }, // Placeholder for future
+    { name: 'Goals', href: '/goals', icon: Target },
+    { name: 'Learn', href: '/learn', icon: Lightbulb },
+    { name: 'Simulator', href: '/simulator', icon: SlidersHorizontal },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);

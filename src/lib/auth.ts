@@ -18,7 +18,7 @@ const config: NextAuthConfig = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials: any) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Email and password are required');
         }
@@ -37,8 +37,8 @@ const config: NextAuthConfig = {
 
           // Compare passwords
           const passwordMatch = await compare(
-            credentials.password,
-            user.password
+            String(credentials.password),
+            String(user.password)
           );
 
           if (!passwordMatch) {
