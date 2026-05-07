@@ -69,11 +69,20 @@ export function OnboardingContent() {
     return () => controller.abort();
   }, [isEdit, planId]);
 
-  const handleSubmit = async (data: PlanData) => {
+  const handleSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
       const endpoint = isEdit && planId ? `/api/plan/${planId}` : "/api/plan";
       const method = isEdit && planId ? "PUT" : "POST";
+
+      // Support both legacy format (goalAmount/goalDuration) and new format (goals array)
+      const goals = Array.isArray(data.goals) ? data.goals : (
+        (data.goalAmount ?? 0) > 0 ? [{
+          name: "Savings Goal",
+          amount: data.goalAmount,
+          duration: data.goalDuration,
+        }] : []
+      );
 
       const response = await fetch(endpoint, {
         method,
@@ -82,11 +91,7 @@ export function OnboardingContent() {
           monthlySalary: data.monthlySalary,
           needs: data.needs,
           wants: data.wants,
-          goals: data.goalAmount > 0 ? [{
-            name: "Savings Goal",
-            amount: data.goalAmount,
-            duration: data.goalDuration,
-          }] : [],
+          goals,
         }),
       });
 
