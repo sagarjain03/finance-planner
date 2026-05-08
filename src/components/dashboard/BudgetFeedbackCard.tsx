@@ -6,8 +6,6 @@ interface BudgetFeedbackCardProps {
   monthlySalary: number;
 }
 
-type StatusIcon = "over" | "ideal" | "under";
-
 const IDEAL_NEEDS = 50;
 const IDEAL_WANTS = 30;
 const IDEAL_SAVINGS = 20;

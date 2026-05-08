@@ -6,6 +6,13 @@ interface ChatMessage {
   content: string;
 }
 
+interface TaxData {
+  oldRegimeTax?: number;
+  newRegimeTax?: number;
+  recommendedRegime?: string;
+  [key: string]: number | string | undefined;
+}
+
 interface FinancialContext {
   monthlySalary?: number;
   monthlyExpenses?: number;
@@ -15,7 +22,7 @@ interface FinancialContext {
   healthScore?: number;
   healthGrade?: string;
   investmentAllocation?: Array<{ type: string; percentage: number }>;
-  taxData?: any;
+  taxData?: TaxData;
   alerts?: Array<{ type: string; message: string }>;
 }
 
@@ -56,7 +63,7 @@ function buildContextString(context: FinancialContext): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json() as { message: string; history?: ChatMessage[]; context?: FinancialContext };
     const { message, history = [], context = {} } = body;
 
     if (!message || typeof message !== 'string') {
@@ -100,10 +107,9 @@ Guidelines:
 - Always emphasize the importance of emergency funds and consistent saving`;
 
     // Convert history to Groq format
-    const conversationHistory: ChatMessage[] = history.map((msg: any) => ({
-      role: msg.role,
-      content: msg.content,
-    }));
+    const conversationHistory: ChatMessage[] = Array.isArray(history) 
+      ? history.filter((msg): msg is ChatMessage => msg && typeof msg === 'object' && 'role' in msg && 'content' in msg)
+      : [];
 
     // Add current user message
     conversationHistory.push({

@@ -7,13 +7,13 @@ import { FinancialPlanOutput } from "@/types/financial";
 import { PageContainer } from "@/components/shared/PageContainer";
 import { GoalList } from "@/components/goals/GoalList";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { EmptyState } from "@/components/empty/EmptyState";
 import { Target, TrendingUp, Award, Plus } from "lucide-react";
 
 export default function GoalsPage() {
   const router = useRouter();
-  const [plan, setPlan] = useState<FinancialPlanOutput | null>(null);
+  const [plan, setPlan] = useState<(FinancialPlanOutput & { _id?: string }) | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -64,12 +64,12 @@ export default function GoalsPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
               <h1 className="text-5xl font-black text-white mb-3">Your Financial Goals</h1>
-              <p className="text-lg text-slate-400">
+              <p className="text-lg text-zinc-400">
                 Track your savings targets and monitor progress towards your dreams
               </p>
             </div>
             <Button 
-              onClick={() => router.push("/onboarding?edit=true&id=" + (plan as any)._id)}
+              onClick={() => router.push("/onboarding?edit=true&id=" + (plan?._id || ''))}
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/50 h-12 px-8"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -86,12 +86,12 @@ export default function GoalsPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            <Card className="bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800">
+            <Card className=" pt-4 bg-white dark:bg-zinc-900/80 border-zinc-200 dark:border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 font-semibold">Total Goal Amount</p>
-                    <p className="text-3xl font-black text-slate-900 dark:text-white mt-2">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 font-semibold">Total Goal Amount</p>
+                    <p className="text-3xl font-black text-zinc-900 dark:text-white mt-2">
                       ₹{totalGoalAmount.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                     </p>
                   </div>
@@ -100,12 +100,12 @@ export default function GoalsPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800">
+            <Card className="pt-4 bg-white dark:bg-zinc-900/80 border-zinc-200 dark:border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 font-semibold">Total Goals</p>
-                    <p className="text-3xl font-black text-slate-900 dark:text-white mt-2">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 font-semibold">Total Goals</p>
+                    <p className="text-3xl font-black text-zinc-900 dark:text-white mt-2">
                       {plan.goalsAnalysis?.length || 0}
                     </p>
                   </div>
@@ -114,11 +114,11 @@ export default function GoalsPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800">
+            <Card className="pt-4 bg-white dark:bg-zinc-900/80 border-zinc-200 dark:border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 font-semibold">Achievable Goals</p>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 font-semibold">Achievable Goals</p>
                     <p className="text-3xl font-black text-emerald-500 mt-2">
                       {completedGoals}/{plan.goalsAnalysis?.length || 0}
                     </p>
@@ -151,7 +151,7 @@ export default function GoalsPage() {
               description="Create your first financial goal to start tracking your progress towards your dreams"
               action={{
                 label: "Create Your First Goal",
-                onClick: () => router.push("/onboarding?edit=true&id=" + (plan as any)._id),
+                onClick: () => router.push("/onboarding?edit=true&id=" + (plan?._id || '')),
               }}
             />
           </motion.div>

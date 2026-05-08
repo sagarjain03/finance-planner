@@ -20,8 +20,8 @@ export function QuickStatsCards({
   defaultExpenses = 30000,
   showSavingsRate = true,
 }: QuickStatsCardsProps) {
-  const monthlySalary = salary ?? plan?.input?.monthlySalary ?? plan?.monthlySalary ?? defaultSalary;
-  const monthlyExpenses = expenses ?? plan?.input?.monthlyExpenses ?? plan?.monthlyExpenses ?? defaultExpenses;
+  const monthlySalary = salary ?? plan?.input?.monthlySalary ?? defaultSalary;
+  const monthlyExpenses = expenses ?? plan?.input?.monthlyExpenses ?? defaultExpenses;
   const monthlySavings = monthlySalary - monthlyExpenses;
   const savingsRate = monthlySalary > 0 ? ((monthlySalary - monthlyExpenses) / monthlySalary) * 100 : 0;
 
